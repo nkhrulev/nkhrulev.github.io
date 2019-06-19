@@ -1,0 +1,20 @@
+{
+  "short_name": "nco",
+  "name": "nicolsco",
+  "start_url": "/nicolsco/",
+  "display": "standalone",
+  "background_color": "#317EFB",
+  "theme_color": "#317EFB",
+  "icons": [
+    {
+      "src": "/img/icons-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/img/icons-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}
