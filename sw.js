@@ -1,25 +1,53 @@
-var SLOW_TIME = 3000;
+const PRECACHE = 'precache-v1';
+const RUNTIME = 'runtime';
 
-this.addEventListener( 'install', function () {
-  //console.log('Service Worker Registered');
-} );
+const PRECACHE_URLS = [
+  'index.html',
+  'favicon.ico',
+  'favicon.png',
+  'books.txt',
+  'css/base.css',
+  'css/main.css',
+  'css/vendor.css'
+];
 
-this.addEventListener( 'fetch', function(event) {
-  var url = event.request.url;
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open(PRECACHE)
+      .then(cache => cache.addAll(PRECACHE_URLS))
+      .then(self.skipWaiting())
+  );
+});
 
-  console.log(event.request.url);
+self.addEventListener('activate', event => {
+  const currentCaches = [PRECACHE, RUNTIME];
+  event.waitUntil(
+    caches.keys().then(cacheNames => {
+      return cacheNames.filter(cacheName => !currentCaches.includes(cacheName));
+    }).then(cachesToDelete => {
+      return Promise.all(cachesToDelete.map(cacheToDelete => {
+        return caches.delete(cacheToDelete);
+      }));
+    }).then(() => self.clients.claim())
+  );
+});
 
-  if ( url.indexOf( 'blocking' ) === -1) {
-  return;
+self.addEventListener('fetch', event => {
+  if (event.request.url.startsWith(self.location.origin)) {
+    event.respondWith(
+      caches.match(event.request).then(cachedResponse => {
+        if (cachedResponse) {
+          return cachedResponse;
+        }
+
+        return caches.open(RUNTIME).then(cache => {
+          return fetch(event.request).then(response => {
+            return cache.put(event.request, response.clone()).then(() => {
+              return response;
+            });
+          });
+        });
+      })
+    );
   }
-
-  var promise = Promise.race( [
-    new Promise( ( resolve, reject) => setTimeout(
-      () => reject( new Response( 'Request killed!' ) ),
-      SLOW_TIME
-    ) ),
-    fetch( event.request ),
-  ] );
-
-  event.respondWith( promise );
-} );
+});
