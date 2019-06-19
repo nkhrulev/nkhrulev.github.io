@@ -834,7 +834,7 @@
     <script data-cfasync="false" type="text/javascript" src="js/sendEmail.js"></script>
     <script>
 	if('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('sw.js', { scope: '/nicolsco/' })
+        navigator.serviceWorker.register('sw.js', { scope: '/' })
           .then(function(registration) {
                 console.log('Service Worker Registered');
           });
