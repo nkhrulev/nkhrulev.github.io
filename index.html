@@ -13,12 +13,14 @@
     <title>nicols co</title>
     <meta name="description" content="Разработка нового, доработка и поддержка уже существующего функционала, обучение программированию на всех возможных языках. Как добиваться успеха в программировании, наслаждаясь жизнью, при этом работая не 12 часов, а головой." />
     <meta name="author" content="" />
-	<meta http-equiv="Cache-Control" content="max-age=31557600, must-revalidate" />
+    <meta http-equiv="Cache-Control" content="max-age=31557600, must-revalidate" />
 
     <!-- mobile specific metas
     ================================================== -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    <meta name="theme-color" content="#317EFB" />
+  
+    <link rel="manifest" href="js/manifest.json">
     <!-- CSS
     ================================================== -->
     <link rel="stylesheet" href="css/base.css">
@@ -829,7 +831,19 @@
     <script src="js/jquery-3.2.1.min.js"></script>
     <script src="js/plugins.js"></script>
     <script src="js/main.js"></script>
-	<script data-cfasync="false" type="text/javascript" src="js/sendEmail.js"></script>
+    <script data-cfasync="false" type="text/javascript" src="js/sendEmail.js"></script>
+    <script>
+	if('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js', { scope: '/nicolsco/' })
+          .then(function(registration) {
+                console.log('Service Worker Registered');
+          });
+
+        navigator.serviceWorker.ready.then(function(registration) {
+           console.log('Service Worker Ready');
+        });
+	}
+    </script>
 
 </body>
 
